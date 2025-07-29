@@ -1,0 +1,6 @@
+.git
+build/
+datasets/
+__pycache__/
+*.jpg
+*.zip
