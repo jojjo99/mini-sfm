@@ -10,10 +10,11 @@ list(FILTER CAMERA_SOURCES EXCLUDE REGEX "main.cpp")
 # Add subdirectories for modules
 add_subdirectory(src/camera)
 add_subdirectory(src/geometry)
+add_subdirectory(src/image)
 
 # Main app
 add_executable(mini_sfm src/main.cpp)
-target_link_libraries(mini_sfm PRIVATE camera geometry)
+target_link_libraries(mini_sfm PRIVATE camera geometry image)
 
 
 # GoogleTest support
@@ -31,3 +32,5 @@ endfunction()
 add_camera_test(test_camera)
 add_camera_test(test_keypoint)
 add_camera_test(test_point3D)
+add_camera_test(test_image)
+
