@@ -21,7 +21,6 @@ void ImageLoader::loadImagesFromFolder(const std::string& folder_path) {
             cv::Mat gray;
             cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
  
-            // 3. Detect keypoints and compute descriptors
             std::vector<cv::KeyPoint> keypoints;
             cv::Mat descriptors;
             sift->detectAndCompute(gray, cv::noArray(), keypoints, descriptors);
