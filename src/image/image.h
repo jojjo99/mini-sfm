@@ -1,5 +1,6 @@
 #include <set>
 #include <vector>
+#include <array>
 #include <opencv2/core.hpp>
 #include <opencv2/features2d.hpp>
 
@@ -8,9 +9,11 @@ class Image {
         int image_id;
         std::vector<cv::KeyPoint> keypoints;
         cv::Mat descriptors;
-        std::vector<float> qvector;
-        std::vector<float> tvector;
+        std::array<float, 4> qvector{};
+        std::array<float, 3> tvector{};
         std::string file_path;
+        cv::Matx33f intrinsics;
+        cv::Size image_size;
 
     public:
         Image(int id, const std::string& path) : image_id(id), file_path(path) {}
@@ -24,11 +27,17 @@ class Image {
         const std::vector<cv::KeyPoint>& getKeypoints() const { return keypoints; }
         const cv::Mat& getDescriptors() const { return descriptors; }
 
-        void setQVector(const std::vector<float>& q) { qvector = q; }
-        const std::vector<float>& getQVector() const { return qvector; }    
+        void setQVector(const std::array<float, 4>& q) { qvector = q; }
+        const std::array<float, 4>& getQVector() const { return qvector; }    
 
-        void setTVector(const std::vector<float>& t) { tvector = t; }
-        const std::vector<float>& getTVector() const { return tvector; }
+        void setTVector(const std::array<float, 3>& t) { tvector = t; }
+        const std::array<float, 3>& getTVector() const { return tvector; }
+
+        void setIntrinsic(const cv::Matx33f &intr ) {intrinsics=intr;}
+        const cv::Matx33f & getIntrinsics() const {return intrinsics;}
+
+        void setImageSize(int width, int height){image_size=cv::Size(width, height);}
+        const cv::Size& getImageSize() const {return image_size;}
 
 
 };
