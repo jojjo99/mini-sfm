@@ -16,10 +16,11 @@ add_subdirectory(src/camera)
 add_subdirectory(src/geometry)
 add_subdirectory(src/image)
 add_subdirectory(src/io/)
+add_subdirectory(src/matching)
 
 # Main app
 add_executable(mini_sfm src/main.cpp)
-target_link_libraries(mini_sfm PRIVATE camera geometry image image_loader ${OpenCV_LIBS})
+target_link_libraries(mini_sfm PRIVATE camera geometry image image_loader bf_matcher ${OpenCV_LIBS})
 
 
 # GoogleTest support
@@ -29,7 +30,7 @@ enable_testing()
 # Helper function to add test targets
 function(add_camera_test test_name)
     add_executable(${test_name} tests/${test_name}.cpp)
-    target_link_libraries(${test_name} PRIVATE camera geometry image image_loader gtest gtest_main pthread ${OpenCV_LIBS})
+    target_link_libraries(${test_name} PRIVATE camera geometry image image_loader gtest bf_matcher gtest_main pthread ${OpenCV_LIBS})
     gtest_discover_tests(${test_name})
 endfunction()
 # Add your tests using the helper
@@ -38,6 +39,7 @@ add_camera_test(test_keypoint)
 add_camera_test(test_point3D)
 add_camera_test(test_image)
 add_camera_test(test_image_loader)
+add_camera_test(test_bf_matcher)
 
 
 file(COPY ${CMAKE_SOURCE_DIR}/tests/data/test_images 

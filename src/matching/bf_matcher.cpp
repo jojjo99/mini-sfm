@@ -1,13 +1,8 @@
 #pragma once
-#include "matcher.h"
+#include "bf_matcher.h"
 #include <opencv2/features2d.hpp>
 
-class BFMatcherWrapper : public Matcher {
-
-    public:
-        // override abstract function
-        std::vector<cv::DMatch> match(const Image& img1, const Image& img2) override
-        {
+std::vector<cv::DMatch> BFMatcherWrapper::match(const Image& img1, const Image& img2){
             cv::BFMatcher matcher(cv::NORM_L2);
             std::vector<std::vector<cv::DMatch>> knn_matches;
             matcher.knnMatch(img1.getDescriptors(), img2.getDescriptors(), knn_matches, 2); // two NN for ratio test later
@@ -22,5 +17,4 @@ class BFMatcherWrapper : public Matcher {
             
             }
             return good_matches;
-        }
-};
+        };

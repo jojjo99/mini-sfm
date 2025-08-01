@@ -32,6 +32,7 @@ void ImageLoader::loadImagesFromFolder(const std::string& folder_path) {
             current_id++;
         }
     }
+
 };
 
 const Image* ImageLoader::getImage(int image_id) const {

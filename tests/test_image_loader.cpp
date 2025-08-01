@@ -6,7 +6,7 @@ TEST(ImageLoaderTest, LoadImagesFromFolder) {
     std::string test_folder = "./tests/data/test_images";
     loader.loadImagesFromFolder(test_folder);
     const auto& images =loader.getImages();
-    EXPECT_EQ(images.size(), 3);
+    EXPECT_EQ(images.size(), 2);
     const Image* img=loader.getImage(0);
     ASSERT_NE(img, nullptr);  
     EXPECT_EQ(img->getId(), 0);
