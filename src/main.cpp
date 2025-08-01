@@ -2,7 +2,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
 #include <filesystem>
-
+#include "./verification/geometric_verifier.h"
+#include "./image/image.h"
 int main() {
     std::string path1 = "/app/tests/data/test_images/im1.jpg";
     std::string path2 = "/app/tests/data/test_images/im2.jpg";
@@ -15,6 +16,7 @@ int main() {
         std::cerr << "Could not load one of the images!" << std::endl;
         return -1;
     }
+    
 
     // 2. Create SIFT detector
     cv::Ptr<cv::SIFT> sift = cv::SIFT::create();
@@ -32,6 +34,8 @@ int main() {
     cv::BFMatcher matcher(cv::NORM_L2);
     std::vector<std::vector<cv::DMatch>> knn_matches;
     matcher.knnMatch(desc1, desc2, knn_matches, 2);
+
+    
 
     // 5. Apply Lowe's ratio test
     std::vector<cv::DMatch> good_matches;
@@ -54,6 +58,31 @@ int main() {
     std::string output_path = "/app/output/matches.jpg";
     if (cv::imwrite(output_path, img_matches)) {
         std::cout << "Saved matches visualization to " << output_path << std::endl;
+    } else {
+        std::cerr << "Failed to save matches image!" << std::endl;
+    }
+    // With geometric verification
+    Image img1_obj(1, path1);
+    img1_obj.setKeypoints(kps1);
+    img1_obj.setDescriptors(desc1);
+    img1_obj.setIntrinsics(cv::Matx33f::eye()); 
+
+    Image img2_obj(2, path2);
+    img2_obj.setKeypoints(kps2);
+    img2_obj.setDescriptors(desc2);
+    img2_obj.setIntrinsics(cv::Matx33f::eye()); 
+    GeometricVerifier verifier;
+    std::vector<cv::DMatch> inlier_matches=verifier.verify(img1_obj, img2_obj, good_matches);
+
+    cv::Mat img_matches_inliers;
+    cv::drawMatches(img1, kps1, img2, kps2, inlier_matches, img_matches_inliers,
+                    cv::Scalar::all(-1), cv::Scalar::all(-1),
+                    std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+
+    // Save or display
+    std::string output_path_inliers = "/app/output/matches_inliers.jpg";
+    if (cv::imwrite(output_path_inliers, img_matches_inliers)) {
+        std::cout << "Saved matches visualization to " << output_path_inliers << std::endl;
     } else {
         std::cerr << "Failed to save matches image!" << std::endl;
     }

@@ -8,6 +8,7 @@
 class Image {
     private:
         int image_id;
+        cv::Mat image;
         std::vector<cv::KeyPoint> keypoints;
         cv::Mat descriptors;
         std::array<float, 4> qvector{};
@@ -17,7 +18,7 @@ class Image {
         cv::Size image_size;
 
     public:
-        Image(int id, const std::string& path) : image_id(id), file_path(path) {}
+        Image(int id, const std::string& path) : image_id(id), file_path(path) { intrinsics = cv::Matx33f::eye(); }
         int getId() const { return image_id; }
         bool hasFeatures() const { return !keypoints.empty() && !descriptors.empty(); }
 
@@ -34,11 +35,13 @@ class Image {
         void setTVector(const std::array<float, 3>& t) { tvector = t; }
         const std::array<float, 3>& getTVector() const { return tvector; }
 
-        void setIntrinsic(const cv::Matx33f &intr ) {intrinsics=intr;}
+        void setIntrinsics(const cv::Matx33f &intr ) {intrinsics=intr;}
         const cv::Matx33f & getIntrinsics() const {return intrinsics;}
 
         void setImageSize(int width, int height){image_size=cv::Size(width, height);}
         const cv::Size& getImageSize() const {return image_size;}
 
+        const cv::Mat& getImage() const { return image; }
+        void setImage(const cv::Mat& img) { image = img; }
 
 };
