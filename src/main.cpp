@@ -4,6 +4,7 @@
 #include <filesystem>
 #include "./verification/geometric_verifier.h"
 #include "./image/image.h"
+#include "./pose_estimator/pose_estimator.h"
 int main() {
     std::string path1 = "/app/tests/data/test_images/im1.jpg";
     std::string path2 = "/app/tests/data/test_images/im2.jpg";
@@ -86,6 +87,14 @@ int main() {
     } else {
         std::cerr << "Failed to save matches image!" << std::endl;
     }
+    PoseEstimator estimator;
+    std::pair<cv::Mat, cv::Mat> pose_pair=estimator.estimateRelativePose(img1_obj, img2_obj, inlier_matches);
+    std::cout << "Relative pose R:\n" << pose_pair.first << std::endl;
+    std::cout << "Relative pose t:\n" << pose_pair.second << std::endl;
+
+    std::cout << "det(R): " << cv::determinant(pose_pair.first) << std::endl; //should be 1
+    std::cout << "R*R^T: " << pose_pair.first * pose_pair.first.t() << std::endl;  // Should be identity
+    std::cout << "||t||: " << cv::norm(pose_pair.second) << std::endl; // should be 1
 
     return 0;
 }

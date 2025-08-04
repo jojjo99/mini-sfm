@@ -18,10 +18,11 @@ add_subdirectory(src/image)
 add_subdirectory(src/io/)
 add_subdirectory(src/matching)
 add_subdirectory(src/verification)
+add_subdirectory(src/pose_estimator)
 
 # Main app
 add_executable(mini_sfm src/main.cpp)
-target_link_libraries(mini_sfm PRIVATE camera geometry image image_loader bf_matcher geometric_verifier ${OpenCV_LIBS})
+target_link_libraries(mini_sfm PRIVATE camera geometry image image_loader bf_matcher geometric_verifier pose_estimator ${OpenCV_LIBS})
 
 
 # GoogleTest support
@@ -31,7 +32,7 @@ enable_testing()
 # Helper function to add test targets
 function(add_camera_test test_name)
     add_executable(${test_name} tests/${test_name}.cpp)
-    target_link_libraries(${test_name} PRIVATE camera geometry image image_loader gtest bf_matcher gtest_main geometric_verifier pthread ${OpenCV_LIBS})
+    target_link_libraries(${test_name} PRIVATE camera geometry image image_loader gtest bf_matcher geometric_verifier pose_estimator gtest_main pthread ${OpenCV_LIBS})
     gtest_discover_tests(${test_name})
 endfunction()
 # Add your tests using the helper
